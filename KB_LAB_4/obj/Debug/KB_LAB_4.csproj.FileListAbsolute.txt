@@ -7,3 +7,4 @@ C:\Users\jokci\RiderProjects\KB_LAB_4\KB_LAB_4\obj\Debug\KB_LAB_4.Properties.Res
 C:\Users\jokci\RiderProjects\KB_LAB_4\KB_LAB_4\obj\Debug\KB_LAB_4.csproj.GenerateResource.Cache
 C:\Users\jokci\RiderProjects\KB_LAB_4\KB_LAB_4\obj\Debug\KB_LAB_4.exe
 C:\Users\jokci\RiderProjects\KB_LAB_4\KB_LAB_4\obj\Debug\KB_LAB_4.pdb
+C:\Users\jokci\RiderProjects\KB_LAB_4\KB_LAB_4\bin\Debug\CjClutter.ObjLoader.Loader.dll

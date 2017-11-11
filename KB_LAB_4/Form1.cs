@@ -1,14 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using KB_LAB_4.Classes;
+using ObjLoader.Loader.Loaders;
 
 namespace KB_LAB_4
 {
     public class Form1 : Form
     {
+        private List<Vector3D> vectors = new List<Vector3D>();
+        private List<int> values = new List<int>();
+
         private float size = 100f;
         
         private float angleX = 0f;
@@ -42,23 +48,51 @@ namespace KB_LAB_4
                      ControlStyles.ResizeRedraw, // Перерисовывать при изменении размера окна
                 true);
             UpdateStyles();
-            
-//            update();
+
+
+            LoadObj();
+        }
+
+        private void LoadObj()
+        {
+            var objLoaderFactory = new ObjLoaderFactory();
+            var objLoader = objLoaderFactory.Create();
+            var fileStream = new FileStream("G:\\универ\\4 курс\\компьютерная графика\\Kompyuteraya_grafika\\Компьютерая графика\\obj файлы\\Hammer.obj",
+                FileMode.Open);
+            var loadedObj = objLoader.Load(fileStream);
+
+            foreach (var g in loadedObj.Groups)
+            {
+                foreach (var f in g.Faces)
+                {
+                    values.Add(f.Count);
+                    for (var i = 0; i < f.Count; i++)
+                    {
+                        vectors.Add(new Vector3D(
+                            loadedObj.Vertices[f[i].VertexIndex - 1].X,
+                            loadedObj.Vertices[f[i].VertexIndex - 1].Y,
+                            loadedObj.Vertices[f[i].VertexIndex - 1].Z
+                        ));
+                    }
+                }
+            }
+
+            fileStream.Close();
         }
 
         private Vector3D[] getObj()
         {
-            var newObj = new Vector3D[8];
-            newObj[0] = new Vector3D( 1,  1,  1);
-            newObj[1] = new Vector3D(-1,  1,  1);
-            newObj[2] = new Vector3D(-1, -1,  1);
-            newObj[3] = new Vector3D( 1, -1,  1);
-            newObj[4] = new Vector3D( 1,  1, -1);
-            newObj[5] = new Vector3D(-1,  1, -1);
-            newObj[6] = new Vector3D(-1, -1, -1);
-            newObj[7] = new Vector3D( 1, -1, -1);
+//            var newObj = new Vector3D[8];
+//            newObj[0] = new Vector3D( 1,  1,  1);
+//            newObj[1] = new Vector3D(-1,  1,  1);
+//            newObj[2] = new Vector3D(-1, -1,  1);
+//            newObj[3] = new Vector3D( 1, -1,  1);
+//            newObj[4] = new Vector3D( 1,  1, -1);
+//            newObj[5] = new Vector3D(-1,  1, -1);
+//            newObj[6] = new Vector3D(-1, -1, -1);
+//            newObj[7] = new Vector3D( 1, -1, -1);
 
-            return newObj;
+            return vectors.ToArray();
         }
 
         private Vector3D GetCenter(Vector3D[] vector)
@@ -75,7 +109,7 @@ namespace KB_LAB_4
             var obj = getObj();
             var center = GetCenter(obj);
             
-            var T = Matrix3D.TranslateMatrix(-width, -height, 0);
+            var T = Matrix3D.TranslateMatrix(width, height, 0);
             var S = Matrix3D.ScaleMatrix(scale / 2);
             var T2 = Matrix3D.TranslateMatrix(center);
 
@@ -95,7 +129,7 @@ namespace KB_LAB_4
             var obj = getObj();
             var center = GetCenter(obj);
             
-            var T = Matrix3D.TranslateMatrix(-width, -height, 0);
+            var T = Matrix3D.TranslateMatrix(width, height, 0);
             var S = Matrix3D.ScaleMatrix(scale / 2);
             var T2 = Matrix3D.TranslateMatrix(center);
             var R = Matrix3D.YRotateMatrix(90);
@@ -116,7 +150,7 @@ namespace KB_LAB_4
             var obj = getObj();
             var center = GetCenter(obj);
             
-            var T = Matrix3D.TranslateMatrix(-width, -height, 0);
+            var T = Matrix3D.TranslateMatrix(width, height, 0);
             var S = Matrix3D.ScaleMatrix(scale / 2);
             var T2 = Matrix3D.TranslateMatrix(center);
             var Rx = Matrix3D.XRotateMatrix(angleX);
@@ -139,7 +173,7 @@ namespace KB_LAB_4
             var obj = getObj();
             var center = GetCenter(obj);
             
-            var T = Matrix3D.TranslateMatrix(-width, -height, 0);
+            var T = Matrix3D.TranslateMatrix(width, height, 0);
             var S = Matrix3D.ScaleMatrix(scale / 2);
             var T2 = Matrix3D.TranslateMatrix(center);
             var R = Matrix3D.XRotateMatrix(90);
@@ -159,37 +193,52 @@ namespace KB_LAB_4
         {
             var b = e.Graphics.ClipBounds;
             var w = Math.Min(b.Width, b.Height);
-            var size = w * 0.5f;
+            var size = w * 0.02f;
             
-            var p = FrontView(size, w / 4f, w / 4f);
-            DrawObj(e.Graphics, p);
+//            var p = FrontView(size, w / 4f, w / 4f);
+//            DrawObj(e.Graphics, p);
+//            
+//            p = SideView(size, 3 * w / 4f, w / 4f);
+//            DrawObj(e.Graphics, p);
+//           
+//            p = BottomView(size, w / 4f, 3 * w / 4f);
+//            DrawObj(e.Graphics, p);
             
-            p = SideView(size, 3 * w / 4f, w / 4f);
-            DrawObj(e.Graphics, p);
-           
-            p = BottomView(size, w / 4f, 3 * w / 4f);
-            DrawObj(e.Graphics, p);
-            
-            p = View3D(size, 3 * w / 4f, 3 * w / 4f);
+            var p = View3D(size, 3 * w / 4f, 3 * w / 4f);
             DrawObj(e.Graphics, p);
         }
 
         private void DrawObj(Graphics g, Vector3D[] p)
         {
             var path = new GraphicsPath();
-            AddLine(path, p[0], p[1], p[2], p[3], p[0], p[4], p[5], p[6], p[7], p[4]);
-            AddLine(path, p[5], p[1]);
-            AddLine(path, p[2], p[6]);
-            AddLine(path, p[6], p[7]);
-            AddLine(path, p[7], p[3]);
-            //рисуем
-            g.DrawPath(Pens.Red, path);
+            AddLine(g, path, p);
+            
+//            g.DrawPath(Pens.Brown, path);
         }
         
-        void AddLine(GraphicsPath path, params Vector3D[] points)
+        void AddLine(Graphics g, GraphicsPath path, params Vector3D[] points)
         {
-            foreach(var p in points)
-                path.AddLines(new [] {new PointF(p.X, p.Y)});
+            var sum = 0;
+            var ps = points.Select(d => new PointF(d.X, d.Y)).ToArray();
+            List<PointF[]> fs = new List<PointF[]>();
+            
+            foreach (var value in values)
+            {
+//                path.AddLines(points.Skip(sum).Take(value).Select(d => new PointF(d.X, d.Y)).ToArray());
+                fs.Add(new [] {ps[sum], ps[sum + 1], ps[sum + 2], ps[sum + 3],});
+//                g.DrawPolygon(Pens.Brown, points.Take(value).Select(d => new PointF(d.X, d.Y)).ToArray());
+//                points = points.Take(value).ToArray();
+                sum += value;
+            }
+
+            foreach (var pointFse in fs)
+            {
+                g.DrawPolygon(Pens.Brown, pointFse);                
+            }
+            
+//            g.DrawLines(Pens.Blue, ps.Select(d => new PointF(d.X, d.Y)).ToArray());
+//            foreach(var p in points)
+//                path.AddLines(new [] {new PointF(p.X, p.Y)});
         }
     }
 }
