@@ -75,7 +75,7 @@ namespace KB_LAB_4
             var obj = getObj();
             var center = GetCenter(obj);
             
-            var T = Matrix3D.TranslateMatrix(width, height, 0);
+            var T = Matrix3D.TranslateMatrix(-width, -height, 0);
             var S = Matrix3D.ScaleMatrix(scale / 2);
             var T2 = Matrix3D.TranslateMatrix(center);
 
@@ -95,7 +95,7 @@ namespace KB_LAB_4
             var obj = getObj();
             var center = GetCenter(obj);
             
-            var T = Matrix3D.TranslateMatrix(width, height, 0);
+            var T = Matrix3D.TranslateMatrix(-width, -height, 0);
             var S = Matrix3D.ScaleMatrix(scale / 2);
             var T2 = Matrix3D.TranslateMatrix(center);
             var R = Matrix3D.YRotateMatrix(90);
@@ -116,7 +116,7 @@ namespace KB_LAB_4
             var obj = getObj();
             var center = GetCenter(obj);
             
-            var T = Matrix3D.TranslateMatrix(width, height, 0);
+            var T = Matrix3D.TranslateMatrix(-width, -height, 0);
             var S = Matrix3D.ScaleMatrix(scale / 2);
             var T2 = Matrix3D.TranslateMatrix(center);
             var Rx = Matrix3D.XRotateMatrix(angleX);
@@ -139,7 +139,7 @@ namespace KB_LAB_4
             var obj = getObj();
             var center = GetCenter(obj);
             
-            var T = Matrix3D.TranslateMatrix(width, height, 0);
+            var T = Matrix3D.TranslateMatrix(-width, -height, 0);
             var S = Matrix3D.ScaleMatrix(scale / 2);
             var T2 = Matrix3D.TranslateMatrix(center);
             var R = Matrix3D.XRotateMatrix(90);
