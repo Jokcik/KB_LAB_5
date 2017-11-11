@@ -1,0 +1,9 @@
+c:\users\jokci\documents\visual studio 2015\Projects\KB_LAB_4\KB_LAB_4\bin\Debug\KB_LAB_4.exe.config
+C:\Users\jokci\RiderProjects\KB_LAB_4\KB_LAB_4\bin\Debug\KB_LAB_4.exe.config
+C:\Users\jokci\RiderProjects\KB_LAB_4\KB_LAB_4\bin\Debug\KB_LAB_4.exe
+C:\Users\jokci\RiderProjects\KB_LAB_4\KB_LAB_4\bin\Debug\KB_LAB_4.pdb
+C:\Users\jokci\RiderProjects\KB_LAB_4\KB_LAB_4\obj\Debug\KB_LAB_4.csprojResolveAssemblyReference.cache
+C:\Users\jokci\RiderProjects\KB_LAB_4\KB_LAB_4\obj\Debug\KB_LAB_4.Properties.Resources.resources
+C:\Users\jokci\RiderProjects\KB_LAB_4\KB_LAB_4\obj\Debug\KB_LAB_4.csproj.GenerateResource.Cache
+C:\Users\jokci\RiderProjects\KB_LAB_4\KB_LAB_4\obj\Debug\KB_LAB_4.exe
+C:\Users\jokci\RiderProjects\KB_LAB_4\KB_LAB_4\obj\Debug\KB_LAB_4.pdb
