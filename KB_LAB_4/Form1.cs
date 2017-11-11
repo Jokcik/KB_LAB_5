@@ -81,8 +81,11 @@ namespace KB_LAB_4
 
             var newObj = new Vector3D[obj.Length];
             var m = T * S * T2;
-            for (int i = 0; i < newObj.Length; i++)
+            for (var i = 0; i < newObj.Length; i++)
+            {
                 newObj[i] = m*obj[i];
+                newObj[i].Normalize();                
+            }
             
             return newObj;
         }
@@ -99,8 +102,11 @@ namespace KB_LAB_4
 
             var newObj = new Vector3D[obj.Length];
             var m = T * S * T2 * R;
-            for (int i = 0; i < newObj.Length; i++)
+            for (var i = 0; i < newObj.Length; i++)
+            {
                 newObj[i] = m*obj[i];
+                newObj[i].Normalize();                
+            }
             
             return newObj;
         }
@@ -115,11 +121,15 @@ namespace KB_LAB_4
             var T2 = Matrix3D.TranslateMatrix(center);
             var Rx = Matrix3D.XRotateMatrix(angleX);
             var Ry = Matrix3D.YRotateMatrix(angleY);
+            var P = Matrix3D.CentralProjection(10000, 10000, 500);
 
             var newObj = new Vector3D[obj.Length];
-            var m = T * S * T2 * Rx * Ry;
+            var m = T * P * S * Rx * Ry * T2;
             for (int i = 0; i < newObj.Length; i++)
+            {
                 newObj[i] = m*obj[i];
+                newObj[i].Normalize();                
+            }
             
             return newObj;
         }
@@ -137,7 +147,10 @@ namespace KB_LAB_4
             var newObj = new Vector3D[obj.Length];
             var m = T * S * T2 * R;
             for (int i = 0; i < newObj.Length; i++)
+            {
                 newObj[i] = m*obj[i];
+                newObj[i].Normalize();                
+            }
             
             return newObj;
         }
@@ -149,19 +162,19 @@ namespace KB_LAB_4
             var size = w * 0.5f;
             
             var p = FrontView(size, w / 4f, w / 4f);
-            DrawObj(e.Graphics, p, w / 4f, w / 4f);
+            DrawObj(e.Graphics, p);
             
             p = SideView(size, 3 * w / 4f, w / 4f);
-            DrawObj(e.Graphics, p, 3 * w / 4f, w / 4f);
+            DrawObj(e.Graphics, p);
            
             p = BottomView(size, w / 4f, 3 * w / 4f);
-            DrawObj(e.Graphics, p, w / 4f, 3 * w / 4f);
+            DrawObj(e.Graphics, p);
             
             p = View3D(size, 3 * w / 4f, 3 * w / 4f);
-            DrawObj(e.Graphics, p, 3 * w / 4f, 3 * w / 4f);
+            DrawObj(e.Graphics, p);
         }
 
-        private void DrawObj(Graphics g, Vector3D[] p, float w, float h)
+        private void DrawObj(Graphics g, Vector3D[] p)
         {
             var path = new GraphicsPath();
             AddLine(path, p[0], p[1], p[2], p[3], p[0], p[4], p[5], p[6], p[7], p[4]);
@@ -169,9 +182,6 @@ namespace KB_LAB_4
             AddLine(path, p[2], p[6]);
             AddLine(path, p[6], p[7]);
             AddLine(path, p[7], p[3]);
-            //сдвигаем
-            g.ResetTransform();
-            g.TranslateTransform(w, h);
             //рисуем
             g.DrawPath(Pens.Red, path);
         }

@@ -128,48 +128,48 @@ namespace KB_LAB_4.Classes
             );
         }
 
-//        // Матрица отражения относительно плоскости YOZ
-//        public static Matrix3D XReflectMatrix()
-//        {
-//            return new Matrix3D(
-//                new float[,]
-//                {
-//                    {-1, 0, 0, 0},
-//                    {0, 1, 0, 0},
-//                    {0, 0, 1, 0},
-//                    {0, 0, 0, 1}
-//                }
-//            );
-//        }
-//
-//        // Матрица отражения относительно плоскости XOZ
-//        public static Matrix3D YReflectMatrix()
-//        {
-//            return new Matrix3D(
-//                new float[,]
-//                {
-//                    {1, 0, 0, 0},
-//                    {0, -1, 0, 0},
-//                    {0, 0, 1, 0},
-//                    {0, 0, 0, 1}
-//                }
-//            );
-//        }
-//
-//        // Матрица отражения относительно плоскости XOY
-//        public static Matrix3D ZReflectMatrix()
-//        {
-//            return new Matrix3D(
-//                new float[,]
-//                {
-//                    {1, 0, 0, 0},
-//                    {0, 1, 0, 0},
-//                    {0, 0, -1, 0},
-//                    {0, 0, 0, 1}
-//                }
-//            );
-//        }
-//
+        // Матрица отражения относительно плоскости YOZ
+        public static Matrix3D XReflectMatrix()
+        {
+            return new Matrix3D(
+                new float[,]
+                {
+                    {-1, 0, 0, 0},
+                    {0, 1, 0, 0},
+                    {0, 0, 1, 0},
+                    {0, 0, 0, 1}
+                }
+            );
+        }
+
+        // Матрица отражения относительно плоскости XOZ
+        public static Matrix3D YReflectMatrix()
+        {
+            return new Matrix3D(
+                new float[,]
+                {
+                    {1, 0, 0, 0},
+                    {0, -1, 0, 0},
+                    {0, 0, 1, 0},
+                    {0, 0, 0, 1}
+                }
+            );
+        }
+
+        // Матрица отражения относительно плоскости XOY
+        public static Matrix3D ZReflectMatrix()
+        {
+            return new Matrix3D(
+                new float[,]
+                {
+                    {1, 0, 0, 0},
+                    {0, 1, 0, 0},
+                    {0, 0, -1, 0},
+                    {0, 0, 0, 1}
+                }
+            );
+        }
+
         // Матрица переноса
         public static Matrix3D TranslateMatrix(Vector3D position)
         {
@@ -181,10 +181,10 @@ namespace KB_LAB_4.Classes
             return new Matrix3D(
                 new[,]
                 {
-                    {1, 0, 0, 0},
-                    {0, 1, 0, 0},
-                    {0, 0, 1, 0},
-                    {tX, tY, tZ, 1}
+                    {1, 0, 0, tX},
+                    {0, 1, 0, tY},
+                    {0, 0, 1, tZ},
+                    {0, 0, 0, 1}
                 }
             );
         }
@@ -225,20 +225,20 @@ namespace KB_LAB_4.Classes
             return OrthogonalMatrix(0, 1, 1);
         }
 
-//        // Матрица для центральной проекции
-//        public static Matrix3D CentralProjection(float x, float y, float z)
-//        {
-//            return new Matrix3D(
-//                new[,]
-//                {
-//                    {1, 0, 0, -1 / x},
-//                    {0, 1, 0, -1 / y},
-//                    {0, 0, 1, -1 / z},
-//                    {0, 0, 0, 1}
-//                }
-//            );
-//        }
-//
+        // Матрица для центральной проекции
+        public static Matrix3D CentralProjection(float x, float y, float z)
+        {
+            return new Matrix3D(
+                new[,]
+                {
+                    {1, 0, 0, -1 / x},
+                    {0, 1, 0, -1 / y},
+                    {0, 0, 1, -1 / z},
+                    {0, 0, 0, 1}
+                }
+            );
+        }
+
 //        // Косоугольная кабинетная проекция
 //        public static Matrix3D ObliqueCabinetProjection()
 //        {

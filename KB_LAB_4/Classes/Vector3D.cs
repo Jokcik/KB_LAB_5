@@ -53,32 +53,22 @@
         public static Vector3D operator *( Matrix3D matrix, Vector3D vector )
         {
             var result = new Vector3D();
-            result[0] = matrix[0, 0] * vector.X + matrix[0, 1] * vector.Y + matrix[0, 2] * vector.Z + matrix[0, 3];
-            result[1] = matrix[1, 0] * vector.X + matrix[1, 1] * vector.Y + matrix[1, 2] * vector.Z + matrix[1, 3];
-            result[2] = matrix[2, 0] * vector.X + matrix[2, 1] * vector.Y + matrix[2, 2] * vector.Z + matrix[2, 3];
-            result[3] = matrix[3, 0] * vector.X + matrix[3, 1] * vector.Y + matrix[3, 2] * vector.Z + matrix[3, 3];
+            result[0] = matrix[0, 0] * vector[0] + matrix[0, 1] * vector[1] + matrix[0, 2] * vector[2] + matrix[0, 3] * vector[3];
+            result[1] = matrix[1, 0] * vector[0] + matrix[1, 1] * vector[1] + matrix[1, 2] * vector[2] + matrix[1, 3] * vector[3];
+            result[2] = matrix[2, 0] * vector[0] + matrix[2, 1] * vector[1] + matrix[2, 2] * vector[2] + matrix[2, 3] * vector[3];
+            result[3] = matrix[3, 0] * vector[0] + matrix[3, 1] * vector[1] + matrix[3, 2] * vector[2] + matrix[3, 3] * vector[3];
 
             return result;
         }
         
-//        public static Vector3D operator *(Matrix3D matrix, Vector3D point)
-//        {
-//            Vector3D result = new Vector3D();
-//            for (int i = 0; i < 4; i++)
-//            {
-//                for (int j = 0; j < 4; j++)
-//                    result[i] += point[j] * matrix[j, i];
-//            }
-//            return result;
-//        }
 
-//        // Нормализация точки
-//        public void Normalize()
-//        {
-//            this.X /= point[3];
-//            this.Y /= point[3];
-//            this.Z /= point[3];
-//            point[3] = 1;
-//        }
+        // Нормализация точки
+        public void Normalize()
+        {
+            X /= _point[3];
+            Y /= _point[3];
+            Z /= _point[3];
+            _point[3] = 1;
+        }
     }
 }
