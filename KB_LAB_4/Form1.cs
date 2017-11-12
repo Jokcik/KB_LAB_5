@@ -19,6 +19,7 @@ namespace KB_LAB_4
         
         private float angleX = 0f;
         private float angleY = 0f;
+        private float angleZ = 0f;
 
         private Point currentLocation = new Point(0, 0);
 
@@ -27,6 +28,7 @@ namespace KB_LAB_4
             if (e.Button != MouseButtons.Left) return;
             angleY += (e.Location.X - currentLocation.X) / 1.0f;
             angleX += (e.Location.Y - currentLocation.Y) / 1.0f;
+            angleZ += (e.Location.Y - currentLocation.Y) / 1.0f;
             currentLocation = e.Location;
             
             Invalidate();
@@ -155,10 +157,11 @@ namespace KB_LAB_4
             var T2 = Matrix3D.TranslateMatrix(center);
             var Rx = Matrix3D.XRotateMatrix(angleX);
             var Ry = Matrix3D.YRotateMatrix(angleY);
+            var Rz = Matrix3D.ZRotateMatrix((angleX + angleY) / 2);
             var P = Matrix3D.CentralProjection(10000, 10000, 500);
 
             var newObj = new Vector3D[obj.Length];
-            var m = T * P * S * Rx * Ry * T2;
+            var m = T * P * S * Rx * Ry * Rz * T2;
             for (int i = 0; i < newObj.Length; i++)
             {
                 newObj[i] = m*obj[i];
@@ -193,18 +196,18 @@ namespace KB_LAB_4
         {
             var b = e.Graphics.ClipBounds;
             var w = Math.Min(b.Width, b.Height);
-            var size = w * 0.02f;
+            var size = w * 0.01f;
             
-//            var p = FrontView(size, w / 4f, w / 4f);
-//            DrawObj(e.Graphics, p);
-//            
-//            p = SideView(size, 3 * w / 4f, w / 4f);
-//            DrawObj(e.Graphics, p);
-//           
-//            p = BottomView(size, w / 4f, 3 * w / 4f);
-//            DrawObj(e.Graphics, p);
+            var p = FrontView(size, w / 4f, w / 4f);
+            DrawObj(e.Graphics, p);
             
-            var p = View3D(size, 3 * w / 4f, 3 * w / 4f);
+            p = SideView(size, 3 * w / 4f, w / 4f);
+            DrawObj(e.Graphics, p);
+           
+            p = BottomView(size, w / 4f, 3 * w / 4f);
+            DrawObj(e.Graphics, p);
+            
+            p = View3D(size, 3 * w / 4f, 3 * w / 4f);
             DrawObj(e.Graphics, p);
         }
 
@@ -225,7 +228,7 @@ namespace KB_LAB_4
             foreach (var value in values)
             {
 //                path.AddLines(points.Skip(sum).Take(value).Select(d => new PointF(d.X, d.Y)).ToArray());
-                fs.Add(new [] {ps[sum], ps[sum + 1], ps[sum + 2], ps[sum + 3],});
+                fs.Add(new [] {ps[sum], ps[sum + 1], ps[sum + 2], ps[sum + 3]});
 //                g.DrawPolygon(Pens.Brown, points.Take(value).Select(d => new PointF(d.X, d.Y)).ToArray());
 //                points = points.Take(value).ToArray();
                 sum += value;
@@ -233,7 +236,8 @@ namespace KB_LAB_4
 
             foreach (var pointFse in fs)
             {
-                g.DrawPolygon(Pens.Brown, pointFse);                
+//                g.FillPolygon(new SolidBrush(Color.FromArgb(255, 255, 128, 64)), pointFse);                
+                g.DrawPolygon(Pens.Black, pointFse);                
             }
             
 //            g.DrawLines(Pens.Blue, ps.Select(d => new PointF(d.X, d.Y)).ToArray());
