@@ -196,7 +196,7 @@ namespace KB_LAB_4
         {
             var b = e.Graphics.ClipBounds;
             var w = Math.Min(b.Width, b.Height);
-            var size = w * 0.01f;
+            var size = w * 0.025f;
             
             var p = FrontView(size, w / 4f, w / 4f);
             DrawObj(e.Graphics, p);

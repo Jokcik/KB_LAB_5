@@ -239,34 +239,34 @@ namespace KB_LAB_4.Classes
             );
         }
 
-//        // Косоугольная кабинетная проекция
-//        public static Matrix3D ObliqueCabinetProjection()
-//        {
-//            return new Matrix3D(
-//                new[,]
-//                {
-//                    {1, 0, 0, 0},
-//                    {0, 1, 0, 0},
-//                    {(float) Math.Cos(Math.PI / 4) / 2, (float) Math.Cos(Math.PI / 4) / 2, 1, 0},
-//                    {0, 0, 0, 1}
-//                }
-//            );
-//        }
-//
-//        // Косоугольная свободная проекция
-//        public static Matrix3D ObliqueFreeProjection()
-//        {
-//            return new Matrix3D(
-//                new[,]
-//                {
-//                    {1, 0, 0, 0},
-//                    {0, 1, 0, 0},
-//                    {(float) Math.Cos(Math.PI / 4), (float) Math.Cos(Math.PI / 4), 1, 0},
-//                    {0, 0, 0, 1}
-//                }
-//            );
-//        }
-//
+        // Косоугольная кабинетная проекция
+        public static Matrix3D ObliqueCabinetProjection()
+        {
+            return new Matrix3D(
+                new[,]
+                {
+                    {1, 0, 0, 0},
+                    {0, 1, 0, 0},
+                    {(float) Math.Cos(Math.PI / 4) / 2, (float) Math.Cos(Math.PI / 4) / 2, 1, 0},
+                    {0, 0, 0, 1}
+                }
+            );
+        }
+
+        // Косоугольная свободная проекция
+        public static Matrix3D ObliqueFreeProjection()
+        {
+            return new Matrix3D(
+                new[,]
+                {
+                    {1, 0, 0, 0},
+                    {0, 1, 0, 0},
+                    {(float) Math.Cos(Math.PI / 4), (float) Math.Cos(Math.PI / 4), 1, 0},
+                    {0, 0, 0, 1}
+                }
+            );
+        }
+
         #endregion
     }
 }
