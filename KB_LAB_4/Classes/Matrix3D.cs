@@ -231,10 +231,10 @@ namespace KB_LAB_4.Classes
             return new Matrix3D(
                 new[,]
                 {
-                    {1, 0, 0, -1 / x},
-                    {0, 1, 0, -1 / y},
-                    {0, 0, 1, -1 / z},
-                    {0, 0, 0, 1}
+                    {1, 0, 0, 0},
+                    {0, 1, 0, 0},
+                    {0, 0, 1, 0},
+                    {-1 / x, -1 / y, -1 / z, 1}
                 }
             );
         }
@@ -245,9 +245,9 @@ namespace KB_LAB_4.Classes
             return new Matrix3D(
                 new[,]
                 {
-                    {1, 0, 0, 0},
-                    {0, 1, 0, 0},
-                    {(float) Math.Cos(Math.PI / 4) / 2, (float) Math.Cos(Math.PI / 4) / 2, 1, 0},
+                    {1, 0, (float) Math.Cos(Math.PI / 4) / 2, 0},
+                    {0, 1, (float) Math.Cos(Math.PI / 4) / 2, 0},
+                    {0, 0, 1, 0},
                     {0, 0, 0, 1}
                 }
             );
@@ -259,9 +259,9 @@ namespace KB_LAB_4.Classes
             return new Matrix3D(
                 new[,]
                 {
-                    {1, 0, 0, 0},
-                    {0, 1, 0, 0},
-                    {(float) Math.Cos(Math.PI / 4), (float) Math.Cos(Math.PI / 4), 1, 0},
+                    {1, 0, (float) Math.Cos(Math.PI / 4), 0},
+                    {0, 1, (float) Math.Cos(Math.PI / 4), 0},
+                    {0, 0, 1, 0},
                     {0, 0, 0, 1}
                 }
             );
