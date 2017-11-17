@@ -7,8 +7,8 @@
     <ProjectGuid>{9E199199-FBB2-43C5-AC21-C23608F5468F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KB_LAB_4</RootNamespace>
-    <AssemblyName>KB_LAB_4</AssemblyName>
+    <RootNamespace>KB_LAB_5</RootNamespace>
+    <AssemblyName>KB_LAB_5</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

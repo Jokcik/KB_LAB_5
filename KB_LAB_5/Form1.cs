@@ -28,7 +28,6 @@ namespace KB_LAB_4
             if (e.Button != MouseButtons.Left) return;
             angleY += (e.Location.X - currentLocation.X) / 1.0f;
             angleX += (e.Location.Y - currentLocation.Y) / 1.0f;
-            angleZ += (e.Location.Y - currentLocation.Y) / 1.0f;
             currentLocation = e.Location;
             
             Invalidate();
@@ -60,6 +59,7 @@ namespace KB_LAB_4
             var objLoaderFactory = new ObjLoaderFactory();
             var objLoader = objLoaderFactory.Create();
             var fileStream = new FileStream("G:\\универ\\4 курс\\компьютерная графика\\Kompyuteraya_grafika\\Компьютерая графика\\obj файлы\\Hammer.obj",
+//            var fileStream = new FileStream("G:\\универ\\4 курс\\компьютерная графика\\Kompyuteraya_grafika\\Компьютерая графика\\obj файлы\\Toilet.obj",
                 FileMode.Open);
             var loadedObj = objLoader.Load(fileStream);
 
@@ -116,7 +116,7 @@ namespace KB_LAB_4
             var T2 = Matrix3D.TranslateMatrix(center);
 
             var newObj = new Vector3D[obj.Length];
-            var m = T * S * T2;
+            var m = T * Matrix3D.ZOrthogonalMatrix() * S * T2;
             for (var i = 0; i < newObj.Length; i++)
             {
                 newObj[i] = m*obj[i];
@@ -137,7 +137,7 @@ namespace KB_LAB_4
             var R = Matrix3D.YRotateMatrix(90);
 
             var newObj = new Vector3D[obj.Length];
-            var m = T * S * T2 * R;
+            var m = T * Matrix3D.ZOrthogonalMatrix() * S * T2 * R;
             for (var i = 0; i < newObj.Length; i++)
             {
                 newObj[i] = m*obj[i];
@@ -156,12 +156,11 @@ namespace KB_LAB_4
             var S = Matrix3D.ScaleMatrix(scale / 2);
             var T2 = Matrix3D.TranslateMatrix(center);
             var Rx = Matrix3D.XRotateMatrix(angleX);
-            var Ry = Matrix3D.YRotateMatrix(angleY);
-            var Rz = Matrix3D.ZRotateMatrix((angleX + angleY) / 2);
+            var Ry = Matrix3D.ZRotateMatrix(angleY);
             var P = Matrix3D.CentralProjection(10000, 10000, 500);
 
             var newObj = new Vector3D[obj.Length];
-            var m = T * P * S * Rx * Ry * Rz * T2;
+            var m = T * P * S * Rx * Ry * T2;
             for (int i = 0; i < newObj.Length; i++)
             {
                 newObj[i] = m*obj[i];
@@ -197,29 +196,23 @@ namespace KB_LAB_4
             var b = e.Graphics.ClipBounds;
             var w = Math.Min(b.Width, b.Height);
             var size = w * 0.025f;
+            var wid = b.Width / 4f;
+            var hei = b.Height / 4f;
             
-            var p = FrontView(size, w / 4f, w / 4f);
+            var p = FrontView(size, wid, hei);
             DrawObj(e.Graphics, p);
             
-            p = SideView(size, 3 * w / 4f, w / 4f);
+            p = SideView(size, 3 * wid, hei);
             DrawObj(e.Graphics, p);
            
-            p = BottomView(size, w / 4f, 3 * w / 4f);
+            p = BottomView(size, wid, 3 * hei);
             DrawObj(e.Graphics, p);
             
-            p = View3D(size, 3 * w / 4f, 3 * w / 4f);
+            p = View3D(size, 3 * wid, 3 * hei);
             DrawObj(e.Graphics, p);
         }
 
-        private void DrawObj(Graphics g, Vector3D[] p)
-        {
-            var path = new GraphicsPath();
-            AddLine(g, path, p);
-            
-//            g.DrawPath(Pens.Brown, path);
-        }
-        
-        void AddLine(Graphics g, GraphicsPath path, params Vector3D[] points)
+        private void DrawObj(Graphics g, IEnumerable<Vector3D> points)
         {
             var sum = 0;
             var ps = points.Select(d => new PointF(d.X, d.Y)).ToArray();
@@ -227,22 +220,10 @@ namespace KB_LAB_4
             
             foreach (var value in values)
             {
-//                path.AddLines(points.Skip(sum).Take(value).Select(d => new PointF(d.X, d.Y)).ToArray());
-                fs.Add(new [] {ps[sum], ps[sum + 1], ps[sum + 2], ps[sum + 3]});
-//                g.DrawPolygon(Pens.Brown, points.Take(value).Select(d => new PointF(d.X, d.Y)).ToArray());
-//                points = points.Take(value).ToArray();
+                g.DrawPolygon(Pens.Black, new []{ps[sum], ps[sum + 1], ps[sum + 2], ps[sum + 3]});                
                 sum += value;
             }
-
-            foreach (var pointFse in fs)
-            {
-//                g.FillPolygon(new SolidBrush(Color.FromArgb(255, 255, 128, 64)), pointFse);                
-                g.DrawPolygon(Pens.Black, pointFse);                
-            }
-            
-//            g.DrawLines(Pens.Blue, ps.Select(d => new PointF(d.X, d.Y)).ToArray());
-//            foreach(var p in points)
-//                path.AddLines(new [] {new PointF(p.X, p.Y)});
         }
+       
     }
 }
