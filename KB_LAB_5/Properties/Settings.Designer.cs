@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace KB_LAB_4.Properties
+namespace KB_LAB_5.Properties
 {
 
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace KB_LAB_4.Classes
+namespace KB_LAB_5.Classes
 {
     public class Matrix3D
     {

@@ -5,16 +5,15 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using KB_LAB_4.Classes;
+using KB_LAB_5.Classes;
 using ObjLoader.Loader.Loaders;
 
-namespace KB_LAB_4
+namespace KB_LAB_5
 {
     public class Form1 : Form
     {
-        private List<Vector3D> vectors = new List<Vector3D>();
-        private List<int> values = new List<int>();
-
+        private List<Polygon> _polygons = new List<Polygon>();
+        private Vector3D _figureCenter;
         private float size = 100f;
         
         private float angleX = 0f;
@@ -50,12 +49,13 @@ namespace KB_LAB_4
                 true);
             UpdateStyles();
 
-
             LoadObj();
         }
 
         private void LoadObj()
         {
+            List<Polygon> polygons = new List<Polygon>();
+            
             var objLoaderFactory = new ObjLoaderFactory();
             var objLoader = objLoaderFactory.Create();
             var fileStream = new FileStream("G:\\универ\\4 курс\\компьютерная графика\\Kompyuteraya_grafika\\Компьютерая графика\\obj файлы\\Hammer.obj",
@@ -67,162 +67,110 @@ namespace KB_LAB_4
             {
                 foreach (var f in g.Faces)
                 {
-                    values.Add(f.Count);
+                    Polygon p = new Polygon();
+                    p.color = Color.FromArgb(255, 255, 128, 64);
+//                    values.Add(f.Count);
                     for (var i = 0; i < f.Count; i++)
                     {
-                        vectors.Add(new Vector3D(
+                        p.AddPoint(new Vector3D(
                             loadedObj.Vertices[f[i].VertexIndex - 1].X,
                             loadedObj.Vertices[f[i].VertexIndex - 1].Y,
                             loadedObj.Vertices[f[i].VertexIndex - 1].Z
                         ));
                     }
+                    polygons.Add(p);
                 }
             }
 
             fileStream.Close();
+            _polygons = polygons;
         }
 
-        private Vector3D[] getObj()
+        private Vector3D GetCenter()
         {
-//            var newObj = new Vector3D[8];
-//            newObj[0] = new Vector3D( 1,  1,  1);
-//            newObj[1] = new Vector3D(-1,  1,  1);
-//            newObj[2] = new Vector3D(-1, -1,  1);
-//            newObj[3] = new Vector3D( 1, -1,  1);
-//            newObj[4] = new Vector3D( 1,  1, -1);
-//            newObj[5] = new Vector3D(-1,  1, -1);
-//            newObj[6] = new Vector3D(-1, -1, -1);
-//            newObj[7] = new Vector3D( 1, -1, -1);
-
-            return vectors.ToArray();
-        }
-
-        private Vector3D GetCenter(Vector3D[] vector)
-        {
-            var Ox = vector.Select(d => d.X).Sum() / vector.Length;
-            var Oy = vector.Select(d => d.Y).Sum() / vector.Length;
-            var Oz = vector.Select(d => d.Z).Sum() / vector.Length;
+            var Ox = 0f;
+            var Oy = 0f;
+            var Oz = 0f;
+            var count = 0;
             
-            return new Vector3D(-Ox, -Oy, -Oz);
+            foreach (var polygon in _polygons)
+            {
+                foreach (var point in polygon.points)
+                {
+                    Ox += point.X;
+                    Oy += point.Y;
+                    Oz += point.Z;
+                    count++;
+                }
+            }
+            
+            return new Vector3D(-Ox / count, -Oy / count, -Oz / count);
         }
         
-        private Vector3D[] FrontView(float scale, float width, float height)
+        private List<Polygon> View3D(float scale, float width, float height)
         {
-            var obj = getObj();
-            var center = GetCenter(obj);
+            _figureCenter = GetCenter();
             
             var T = Matrix3D.TranslateMatrix(width, height, 0);
             var S = Matrix3D.ScaleMatrix(scale / 2);
-            var T2 = Matrix3D.TranslateMatrix(center);
-
-            var newObj = new Vector3D[obj.Length];
-            var m = T * Matrix3D.ZOrthogonalMatrix() * S * T2;
-            for (var i = 0; i < newObj.Length; i++)
-            {
-                newObj[i] = m*obj[i];
-                newObj[i].Normalize();                
-            }
-            
-            return newObj;
-        }
-
-        private Vector3D[] SideView(float scale, float width, float height)
-        {
-            var obj = getObj();
-            var center = GetCenter(obj);
-            
-            var T = Matrix3D.TranslateMatrix(width, height, 0);
-            var S = Matrix3D.ScaleMatrix(scale / 2);
-            var T2 = Matrix3D.TranslateMatrix(center);
-            var R = Matrix3D.YRotateMatrix(90);
-
-            var newObj = new Vector3D[obj.Length];
-            var m = T * Matrix3D.ZOrthogonalMatrix() * S * T2 * R;
-            for (var i = 0; i < newObj.Length; i++)
-            {
-                newObj[i] = m*obj[i];
-                newObj[i].Normalize();                
-            }
-            
-            return newObj;
-        }
-
-        private Vector3D[] View3D(float scale, float width, float height)
-        {
-            var obj = getObj();
-            var center = GetCenter(obj);
-            
-            var T = Matrix3D.TranslateMatrix(width, height, 0);
-            var S = Matrix3D.ScaleMatrix(scale / 2);
-            var T2 = Matrix3D.TranslateMatrix(center);
+            var T2 = Matrix3D.TranslateMatrix(_figureCenter);
             var Rx = Matrix3D.XRotateMatrix(angleX);
             var Ry = Matrix3D.ZRotateMatrix(angleY);
             var P = Matrix3D.CentralProjection(10000, 10000, 500);
-
-            var newObj = new Vector3D[obj.Length];
+           
             var m = T * P * S * Rx * Ry * T2;
-            for (int i = 0; i < newObj.Length; i++)
+            
+            List<Polygon> sortedPolygonList = new List<Polygon>();
+            foreach (Polygon polygon in _polygons)
             {
-                newObj[i] = m*obj[i];
-                newObj[i].Normalize();                
-            }
-            
-            return newObj;
-        }
-        
-        private Vector3D[] BottomView(float scale, float width, float height)
-        {
-            var obj = getObj();
-            var center = GetCenter(obj);
-            
-            var T = Matrix3D.TranslateMatrix(width, height, 0);
-            var S = Matrix3D.ScaleMatrix(scale / 2);
-            var T2 = Matrix3D.TranslateMatrix(center);
-            var R = Matrix3D.XRotateMatrix(90);
+                Polygon mutatePolygon = new Polygon {color = polygon.color};
 
-            var newObj = new Vector3D[obj.Length];
-            var m = T * S * T2 * R;
-            for (int i = 0; i < newObj.Length; i++)
-            {
-                newObj[i] = m*obj[i];
-                newObj[i].Normalize();                
+                foreach (Vector3D point in polygon.points)
+                {
+                    Vector3D mutatePoint = m * point;
+                    mutatePoint.Normalize();
+                    mutatePolygon.points.Add(mutatePoint);
+                }
+
+                mutatePolygon.findMidleZValue();
+                sortedPolygonList.Add(mutatePolygon);
             }
             
-            return newObj;
+            sortedPolygonList.Sort(Polygon.ZDepthComparer);
+
+            return sortedPolygonList;
         }
         
         protected override void OnPaint(PaintEventArgs e)
         {
+            e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
             var b = e.Graphics.ClipBounds;
             var w = Math.Min(b.Width, b.Height);
             var size = w * 0.025f;
-            var wid = b.Width / 4f;
-            var hei = b.Height / 4f;
+            var wid = b.Width / 2f;
+            var hei = b.Height / 2f;
             
-            var p = FrontView(size, wid, hei);
-            DrawObj(e.Graphics, p);
-            
-            p = SideView(size, 3 * wid, hei);
-            DrawObj(e.Graphics, p);
-           
-            p = BottomView(size, wid, 3 * hei);
-            DrawObj(e.Graphics, p);
-            
-            p = View3D(size, 3 * wid, 3 * hei);
+            var p = View3D(size, wid, hei);
             DrawObj(e.Graphics, p);
         }
 
-        private void DrawObj(Graphics g, IEnumerable<Vector3D> points)
+        private void DrawObj(Graphics g, List<Polygon> polygons)
         {
-            var sum = 0;
-            var ps = points.Select(d => new PointF(d.X, d.Y)).ToArray();
-            List<PointF[]> fs = new List<PointF[]>();
-            
-            foreach (var value in values)
+            Pen pen = new Pen(Brushes.Black, 0.3F);
+            foreach (Polygon polygon in polygons)
             {
-                g.DrawPolygon(Pens.Black, new []{ps[sum], ps[sum + 1], ps[sum + 2], ps[sum + 3]});                
-                sum += value;
+                PointF[] pointFArray = new PointF[polygon.points.Count];
+
+                for (int i = 0; i < pointFArray.Length; i++)
+                {
+                    pointFArray[i] = new PointF(polygon.points[i].X, polygon.points[i].Y);
+                }
+
+                g.FillPolygon(new SolidBrush(polygon.color), pointFArray);
+                g.DrawPolygon(pen, pointFArray);
             }
+            
+            
         }
        
     }
