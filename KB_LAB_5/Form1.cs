@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using KB_LAB_5.Classes;
 using ObjLoader.Loader.Loaders;
@@ -55,8 +56,8 @@ namespace KB_LAB_5
             
             var objLoaderFactory = new ObjLoaderFactory();
             var objLoader = objLoaderFactory.Create();
-//            var fileStream = new FileStream("G:\\универ\\4 курс\\компьютерная графика\\Kompyuteraya_grafika\\Компьютерая графика\\obj файлы\\Hammer.obj",
-            var fileStream = new FileStream("G:\\универ\\4 курс\\компьютерная графика\\Kompyuteraya_grafika\\Компьютерая графика\\obj файлы\\Toilet.obj",
+            var fileStream = new FileStream("G:\\универ\\4 курс\\компьютерная графика\\Kompyuteraya_grafika\\Компьютерая графика\\obj файлы\\Hammer.obj",
+//            var fileStream = new FileStream("G:\\универ\\4 курс\\компьютерная графика\\Kompyuteraya_grafika\\Компьютерая графика\\obj файлы\\fig.obj",
                 FileMode.Open);
             var loadedObj = objLoader.Load(fileStream);
 
@@ -102,7 +103,7 @@ namespace KB_LAB_5
             return new Vector3D(-ox / count, -oy / count, -oz / count);
         }
         
-        private IEnumerable<Polygon> View3D(float scale, float width, float height)
+        private List<Polygon> View3D(float scale, float width, float height)
         {
             _figureCenter = GetCenter();
             
@@ -127,18 +128,31 @@ namespace KB_LAB_5
                     mutatePolygon.points.Add(mutatePoint);
                 }
 
-                mutatePolygon.findMidleZValue();
+                mutatePolygon.FindMidleZValue();
                 sortedPolygonList.Add(mutatePolygon);
             }
             
-            sortedPolygonList.Sort(Polygon.ZDepthComparer);
+//            sortedPolygonList.Sort(Polygon.ZDepthComparer);
 
             return sortedPolygonList;
         }
         
         protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+//            var point11 = new Vector3D(100, 100, 100);
+//            var point12 = new Vector3D(200, 100, 80);
+//            var point13 = new Vector3D(100, 200, 50);
+//            var point14 = new Vector3D(200, 200, 20);
+//            var p1 = new Polygon(new []{point11, point12, point14, point13}.ToList(), Color.Brown);
+//           
+//            var point21 = new Vector3D(120, 120, 120);
+//            var point22 = new Vector3D(220, 120, 30);
+//            var point23 = new Vector3D(120, 220, 50);
+//            var point24 = new Vector3D(220, 220, 100);
+//            var p2 = new Polygon(new []{point21, point22, point24, point23}.ToList(), Color.Brown);
+//            
+//            var p = Polygon.Sort(new []{p1, p2}.ToList());
+            e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
             var b = e.Graphics.ClipBounds;
             var w = Math.Min(b.Width, b.Height);
             var sizeObj = w * 0.025f;
@@ -146,6 +160,7 @@ namespace KB_LAB_5
             var hei = b.Height / 2f;
             
             var p = View3D(sizeObj, wid, hei);
+            p = Polygon.Sort(p);
             DrawObj(e.Graphics, p);
         }
 

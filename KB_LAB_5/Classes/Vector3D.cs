@@ -82,25 +82,39 @@ namespace KB_LAB_5.Classes
             return (Oy - Ay) / (By - Ay) * (Bz - Az) + Az;
         }
         
-        public static bool intersect(Vector3D a, Vector3D b, Vector3D c, Vector3D d, out double zAB, out double zCD)
+        public static bool intersect(Vector3D a, Vector3D b, Vector3D c, Vector3D d, out double zAB, out double zCD, bool flag = false)
         {
-            zAB = b.Z - a.Z;
-            zCD = c.Z - d.Z;
-            
+            zAB = 0;
+            zCD = 0;
             var ab = new Vector3D(b.X - a.X, b.Y - a.Y, 0);
-            var cd = new Vector3D(c.X - d.X, c.Y - d.Y, 0);
-            double A1 = ab.Y, B1 = -ab.X, C1 = a.X * b.Y - a.Y * b.X;
-            double A2 = cd.Y, B2 = -cd.X, C2 = c.X * d.Y - c.Y * d.X;
+            var cd = new Vector3D(d.X - c.X, d.Y - c.Y, 0);
+            double A1 = -ab.Y, B1 = ab.X, C1 = -A1 * a.X - B1 * a.Y;
+            double A2 = -cd.Y, B2 = cd.X, C2 = -A2 * c.X - B2 * c.Y;
 
             var D = A1 * B2 - A2 * B1;
             var Dx = -C1 * B2 + C2 * B1;
-            var Dy = A1 * -C2 + A2 * C1;
+            var Dy = -C2 * A1 + C1 * A2;
 
             if (Math.Abs(D) < 0.000001) return false;
             
             var ox = Dx / D;
             var oy = Dy / D;
 
+            if (!flag)
+            {
+                if (!(Math.Min(a.X, b.X) <= ox && ox <= Math.Max(a.X, b.X)))
+                    return false;
+
+                if (!(Math.Min(a.Y, b.Y) <= oy && oy <= Math.Max(a.Y, b.Y)))
+                    return false;
+
+                if (!(Math.Min(c.X, d.X) <= ox && ox <= Math.Max(c.X, d.X)))
+                    return false;
+
+                if (!(Math.Min(c.Y, d.Y) <= oy && oy <= Math.Max(c.Y, d.Y)))
+                    return false;
+            }
+            
             zAB = getZ(ox, oy, a.X, a.Y, a.Z, b.X, b.Y, b.Z);
             zCD = getZ(ox, oy, c.X, c.Y, c.Z, d.X, d.Y, d.Z);
 
