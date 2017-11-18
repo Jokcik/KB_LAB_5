@@ -1,4 +1,6 @@
-﻿namespace KB_LAB_5.Classes
+﻿using System;
+
+namespace KB_LAB_5.Classes
 {
     public class Vector3D
     {
@@ -60,7 +62,50 @@
 
             return result;
         }
+
+        private static double getZ(double Ox, double Oy, double Ax, double Ay, double Az,
+            double Bx, double By, double Bz)
+        {
+            if (Math.Abs(Bx - Ax) > Math.Abs(By - Ay))
+            {
+                return (Ox - Ax) / (Bx - Ax) * (Bz - Az) + Az;
+            }
+            if (Math.Abs(Bx - Ax) < Math.Abs(By - Ay))
+            {
+                return (Oy - Ay) / (By - Ay) * (Bz - Az) + Az;
+            }
+            if (Math.Abs(Bx - Ax) < 0.000001)
+            {
+                return 0;
+            }
+            
+            return (Oy - Ay) / (By - Ay) * (Bz - Az) + Az;
+        }
         
+        public static bool intersect(Vector3D a, Vector3D b, Vector3D c, Vector3D d, out double zAB, out double zCD)
+        {
+            zAB = b.Z - a.Z;
+            zCD = c.Z - d.Z;
+            
+            var ab = new Vector3D(b.X - a.X, b.Y - a.Y, 0);
+            var cd = new Vector3D(c.X - d.X, c.Y - d.Y, 0);
+            double A1 = ab.Y, B1 = -ab.X, C1 = a.X * b.Y - a.Y * b.X;
+            double A2 = cd.Y, B2 = -cd.X, C2 = c.X * d.Y - c.Y * d.X;
+
+            var D = A1 * B2 - A2 * B1;
+            var Dx = -C1 * B2 + C2 * B1;
+            var Dy = A1 * -C2 + A2 * C1;
+
+            if (Math.Abs(D) < 0.000001) return false;
+            
+            var ox = Dx / D;
+            var oy = Dy / D;
+
+            zAB = getZ(ox, oy, a.X, a.Y, a.Z, b.X, b.Y, b.Z);
+            zCD = getZ(ox, oy, c.X, c.Y, c.Z, d.X, d.Y, d.Z);
+
+            return true;
+        }
 
         // Нормализация точки
         public void Normalize()
