@@ -85,18 +85,20 @@ namespace KB_LAB_5.Classes
             var f = true;
             for (int i = 1; i < p1.points.Count + 1; ++i)
             {
-                f = f && p2.Inside(new Vector3D(p1.points[(i - 1) % p1.points.Count].X,
-                        p1.points[(i - 1) % p1.points.Count].Y, p1.points[(i - 1) % p1.points.Count].Z));
+                f = f && (p2.Inside(new Vector3D(p1.points[(i - 1) % p1.points.Count].X,
+                              p1.points[(i - 1) % p1.points.Count].Y, p1.points[(i - 1) % p1.points.Count].Z))
+                          || p1.Inside(new Vector3D(p2.points[(i - 1) % p2.points.Count].X,
+                              p2.points[(i - 1) % p2.points.Count].Y, p2.points[(i - 1) % p2.points.Count].Z)));
             }
 
-            var k = true;
-            for (int i = 1; i < p2.points.Count + 1; ++i)
-            {
-                k = k && p1.Inside(new Vector3D(p2.points[(i - 1) % p2.points.Count].X,
-                        p2.points[(i - 1) % p2.points.Count].Y, p2.points[(i - 1) % p2.points.Count].Z));
-            }
+//            var k = true;
+//            for (int i = 1; i < p2.points.Count + 1; ++i)
+//            {
+//                k = k && p1.Inside(new Vector3D(p2.points[(i - 1) % p2.points.Count].X,
+//                        p2.points[(i - 1) % p2.points.Count].Y, p2.points[(i - 1) % p2.points.Count].Z));
+//            }
             
-            if (f || k)
+            if (f)
             {
                 bool inter;
                 
