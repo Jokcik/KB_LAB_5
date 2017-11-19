@@ -78,11 +78,11 @@ namespace KB_LAB_5.Classes
             {
                 return 0;
             }
-            
-            return (Oy - Ay) / (By - Ay) * (Bz - Az) + Az;
+
+            return (Ox - Ax) / (Bx - Ax) * (Bz - Az) + Az;
         }
         
-        public static bool intersect(Vector3D a, Vector3D b, Vector3D c, Vector3D d, out double zAB, out double zCD, bool flag = false)
+        public static bool intersect(Vector3D a, Vector3D b, Vector3D c, Vector3D d, out double zAB, out double zCD, bool isLine = false)
         {
             zAB = 0;
             zCD = 0;
@@ -100,7 +100,7 @@ namespace KB_LAB_5.Classes
             var ox = Dx / D;
             var oy = Dy / D;
 
-            if (!flag)
+            if (!isLine)
             {
                 if (!(Math.Min(a.X, b.X) <= ox && ox <= Math.Max(a.X, b.X)))
                     return false;

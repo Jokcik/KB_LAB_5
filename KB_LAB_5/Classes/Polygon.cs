@@ -10,11 +10,13 @@ namespace KB_LAB_5.Classes
         public List<Vector3D> points;
         public Color color;
         public float midleZDepthValue;
+        public int id;
 
-        public Polygon(List<Vector3D> points, Color color)
+        public Polygon(List<Vector3D> points, Color color, int id = 0)
         {
             this.points = points;
             this.color = color;
+            this.id = id;
         }
 
         public Polygon()
@@ -83,47 +85,44 @@ namespace KB_LAB_5.Classes
             }
 
             var f = true;
+            var m = true;
             for (int i = 1; i < p1.points.Count + 1; ++i)
             {
-                f = f && (p2.Inside(new Vector3D(p1.points[(i - 1) % p1.points.Count].X,
-                              p1.points[(i - 1) % p1.points.Count].Y, p1.points[(i - 1) % p1.points.Count].Z))
-                          || p1.Inside(new Vector3D(p2.points[(i - 1) % p2.points.Count].X,
-                              p2.points[(i - 1) % p2.points.Count].Y, p2.points[(i - 1) % p2.points.Count].Z)));
+                f = f && p2.Inside(new Vector3D(p1.points[(i - 1) % p1.points.Count].X,
+                        p1.points[(i - 1) % p1.points.Count].Y, p1.points[(i - 1) % p1.points.Count].Z));
+                m = m && p1.Inside(new Vector3D(p2.points[(i - 1) % p2.points.Count].X,
+                              p2.points[(i - 1) % p2.points.Count].Y, p2.points[(i - 1) % p2.points.Count].Z));
             }
 
-//            var k = true;
-//            for (int i = 1; i < p2.points.Count + 1; ++i)
-//            {
-//                k = k && p1.Inside(new Vector3D(p2.points[(i - 1) % p2.points.Count].X,
-//                        p2.points[(i - 1) % p2.points.Count].Y, p2.points[(i - 1) % p2.points.Count].Z));
-//            }
-            
-            if (f)
+            if (f || m)
             {
-                bool inter;
-                
-                for (int i = 1; i < p1.points.Count + 1; ++i)
-                {
-                    for (int j = 1; j < p2.points.Count + 1; ++j)
-                    {
-                        double zAB, zCD;
-                        inter = Vector3D.intersect(
-                            new Vector3D(p1.points[(i - 1) % p1.points.Count].X, p1.points[(i - 1) % p1.points.Count].Y, p1.points[(i - 1) % p1.points.Count].Z), 
-                            new Vector3D(p1.points[i % p1.points.Count].X, p1.points[i % p1.points.Count].Y, p1.points[i % p1.points.Count].Z),
-                            new Vector3D(p2.points[(j - 1) % p2.points.Count].X, p2.points[(j - 1) % p2.points.Count].Y, p2.points[(j - 1) % p2.points.Count].Z), 
-                            new Vector3D(p2.points[j % p2.points.Count].X, p2.points[j % p2.points.Count].Y, p2.points[j % p2.points.Count].Z),
-                            out zAB, out zCD, true
-                        );
-
-                        if (inter)
-                        {
-                            return zAB < zCD ? 1 : (Math.Abs(zAB - zCD) < 0.000001f ? 0 : -1);
-                        }
-                    }
-                }
+                var center = m ? p1 : p2;
+                return intersectPInP(Form1.GetCenter(new[] {f ? p1 : p2}.ToList()), center.points[0], center.points[1],
+                    center.points[2]);
             }
             
             return 0;
+        }
+
+        private static int intersectPInP(Vector3D E, Vector3D v0, Vector3D v1, Vector3D v2)
+        {
+            var Ex0 = E.X - v0.X;
+            var Ey0 = E.Y - v0.Y;
+
+            var x10 = v1.X - v0.X;
+            var x20 = v2.X - v0.X;
+
+            var y10 = v1.Y - v0.Y;
+            var y20 = v2.Y - v0.Y;
+            
+            var z10 = v1.Z - v0.Z;
+            var z20 = v2.Z - v0.Z;
+
+            var A = Ex0 * y10 * z20 + Ey0 * z10 * x20;
+            var B = Ex0 * z10 * y20 + Ey0 * x10 * z20;
+            var Z = v0.Z + (B - A)/(x10 * y20 - y10 * x20);
+
+            return E.Z < Z ? 1 : (Math.Abs(E.Z - Z) < 0.000001f ? 0 : -1);
         }
 
         public static List<Polygon> Sort(List<Polygon> polygons)

@@ -112,7 +112,7 @@ namespace KB_LAB_5.Classes
         // Матрица масштабирования
         public static Matrix3D ScaleMatrix(float scale)
         {
-            return ScaleMatrix(scale / 2, scale / 2, scale / 2);
+            return ScaleMatrix(scale, scale, scale);
         }
         
         public static Matrix3D ScaleMatrix(float sX, float sY, float sZ)
